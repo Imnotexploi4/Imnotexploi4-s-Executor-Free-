@@ -6,23 +6,28 @@ local gui = Instance.new("ScreenGui", player.PlayerGui)
 local mainFrame = Instance.new("Frame", gui)
 local title = Instance.new("TextLabel", mainFrame)
 local closeButton = Instance.new("TextButton", mainFrame)
-local toggleButton = Instance.new("ImageButton", gui) -- Changed to ImageButton to display an image
+local toggleButton = Instance.new("ImageButton", gui)
 local copyButton = Instance.new("TextButton", mainFrame)
 local pasteButton = Instance.new("TextButton", mainFrame)
 local executeButton = Instance.new("TextButton", mainFrame)
-local clearButton = Instance.new("TextButton", mainFrame) -- Clear button
-local executeClipboardButton = Instance.new("TextButton", mainFrame) -- Execute Clipboard button
+local clearButton = Instance.new("TextButton", mainFrame)
 local scriptBox = Instance.new("TextBox", mainFrame)
+local loadButton = Instance.new("TextButton", mainFrame)
+local saveButton = Instance.new("TextButton", mainFrame)
+local recentScriptsFrame = Instance.new("Frame", mainFrame)
+local recentScriptsTitle = Instance.new("TextLabel", recentScriptsFrame)
+local recentScriptsList = Instance.new("ScrollingFrame", recentScriptsFrame)
+local UIListLayout = Instance.new("UIListLayout", recentScriptsList)
 
--- URL for the Delta Exploit icon (Replace with the actual URL of the image)
+-- Hypothetical URL for the Delta Exploit icon
 local deltaExploitIconURL = "http://www.example.com/delta_exploit_icon.png"
 
 -- GUI Properties
 gui.Name = "Imnotexploi4ExecutorV08"
 mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0.5, 0, 0.5, 0)
-mainFrame.Position = UDim2.new(0.25, 0, 0.25, 0)
-mainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+mainFrame.Size = UDim2.new(0.5, 0, 0.6, 0)
+mainFrame.Position = UDim2.new(0.25, 0, 0.2, 0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
 mainFrame.Active = true
 mainFrame.Draggable = true
 
@@ -30,95 +35,133 @@ title.Name = "Title"
 title.Size = UDim2.new(1, 0, 0.1, 0)
 title.Position = UDim2.new(0, 0, 0, 0)
 title.Text = "Imnotexploi4's Executor V0.8"
-title.TextColor3 = Color3.fromRGB(0, 0, 0)
-title.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
 
 closeButton.Name = "CloseButton"
 closeButton.Size = UDim2.new(0.1, 0, 0.1, 0)
 closeButton.Position = UDim2.new(0.9, 0, 0, 0)
 closeButton.Text = "X"
 closeButton.TextColor3 = Color3.fromRGB(255, 0, 0)
-closeButton.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+closeButton.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
 
-toggleButton.Name = "ToggleButton"
-toggleButton.Size = UDim2.new(0.1, 0, 0.1, 0)
+toggleButton.Name = "ToggleButton"toggleButton.Size = UDim2.new(0.1, 0, 0.1, 0)
 toggleButton.Position = UDim2.new(0, 0, 0, 0)
-toggleButton.Image = deltaExploitIconURL -- Set the image for the toggle button
-toggleButton.Visible = false toggleButton.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+toggleButton.Image = deltaExploitIconURL
+toggleButton.Visible = false
+toggleButton.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
 toggleButton.Active = true
 toggleButton.Draggable = true
 
 copyButton.Name = "CopyButton"
-copyButton.Size = UDim2.new(0.2, 0, 0.1, 0)
+copyButton.Size = UDim2.new(0.15, 0, 0.1, 0)
 copyButton.Position = UDim2.new(0.1, 0, 0.85, 0)
 copyButton.Text = "Copy"
-copyButton.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+copyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+copyButton.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
 
 pasteButton.Name = "PasteButton"
-pasteButton.Size = UDim2.new(0.2, 0, 0.1, 0)
-pasteButton.Position = UDim2.new(0.7, 0, 0.85, 0)
+pasteButton.Size = UDim2.new(0.15, 0, 0.1, 0)
+pasteButton.Position = UDim2.new(0.3, 0, 0.85, 0)
 pasteButton.Text = "Paste"
-pasteButton.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+pasteButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+pasteButton.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
 
 executeButton.Name = "ExecuteButton"
-executeButton.Size = UDim2.new(0.2, 0, 0.1, 0)
-executeButton.Position = UDim2.new(0.4, 0, 0.85, 0)
+executeButton.Size = UDim2.new(0.15, 0, 0.1, 0)
+executeButton.Position = UDim2.new(0.5, 0, 0.85, 0)
 executeButton.Text = "Execute"
-executeButton.BackgroundColor3 = Color3.fromRGB(100, 200, 100)
+executeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+executeButton.BackgroundColor3 = Color3.fromRGB(64, 128, 64)
 
 clearButton.Name = "ClearButton"
-clearButton.Size = UDim2.new(0.2, 0, 0.1, 0)
-clearButton.Position = UDim2.new(0.4, 0, 0.75, 0)
+clearButton.Size = UDim2.new(0.15, 0, 0.1, 0)
+clearButton.Position = UDim2.new(0.7, 0, 0.85, 0)
 clearButton.Text = "Clear"
-clearButton.BackgroundColor3 = Color3.fromRGB(200, 100, 100)
+clearButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+clearButton.BackgroundColor3 = Color3.fromRGB(128, 64, 64)
 
-executeClipboardButton.Name = "ExecuteClipboardButton"
-executeClipboardButton.Size = UDim2.new(0.2, 0, 0.1, 0)
-executeClipboardButton.Position = UDim2.new(0.4, 0, 0.65, 0)
-executeClipboardButton.Text = "Exec Clip"
-executeClipboardButton.BackgroundColor3 = Color3.fromRGB(150, 150, 250)
+loadButton.Name = "LoadButton"
+loadButton.Size = UDim2.new(0.15, 0, 0.1, 0)
+loadButton.Position = UDim2.new(0.1, 0, 0.73, 0)
+loadButton.Text = "Load"
+loadButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+loadButton.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+
+saveButton.Name = "SaveButton"
+saveButton.Size = UDim2.new(0.15, 0, 0.1, 0)
+saveButton.Position = UDim2.new(0.3, 0, 0.73, 0)
+saveButton.Text = "Save"
+saveButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+saveButton.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+
+recentScriptsFrame.Name = "RecentScriptsFrame"
+recentScriptsFrame.Size = UDim2.new(0.9, 0, 0.2, 0) recentScriptsFrame.Position = UDim2.new(0.05, 0, 0.1, 0)
+recentScriptsFrame.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+
+recentScriptsTitle.Name = "RecentScriptsTitle"
+recentScriptsTitle.Size = UDim2.new(1, 0, 0.2, 0)
+recentScriptsTitle.Position = UDim2.new(0, 0, 0, 0)
+recentScriptsTitle.Text = "Recent Scripts"
+recentScriptsTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+recentScriptsTitle.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+
+recentScriptsList.Name = "RecentScriptsList"
+recentScriptsList.Size = UDim2.new(1, 0, 0.8, 0)
+recentScriptsList.Position = UDim2.new(0, 0, 0.2, 0)
+recentScriptsList.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+recentScriptsList.CanvasSize = UDim2.new(0, 0, 2, 0)
+
+UIListLayout.FillDirection = Enum.FillDirection.Vertical
+UIListLayout.Padding = UDim.new(0.1, 0)
 
 scriptBox.Name = "ScriptBox"
-scriptBox.Size = UDim2.new(0.9, 0, 0.55, 0)
-scriptBox.Position = UDim2.new(0.05, 0, 0.1, 0)
+scriptBox.Size = UDim2.new(0.9, 0, 0.5, 0)
+scriptBox.Position = UDim2.new(0.05, 0, 0.4, 0)
 scriptBox.Text = "Enter script here"
+scriptBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+scriptBox.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+scriptBox.MultiLine = true
 
 -- Functions
-local function initializeGUI()
-    mainFrame.Visible = true
-    toggleButton.Visible = false
-    print("Hello " .. player.Name .. ", Welcome to Imnotexploi4's Executor V0.8")
-end
-
 local function closeGUI()
-    mainFrame.Visible = false
-    toggleButton.Visible = true
+mainFrame.Visible = false
+toggleButton.Visible = true
 end
 
 local function openGUI()
-    mainFrame.Visible = true
-    toggleButton.Visible = false
+mainFrame.Visible = true
+toggleButton.Visible = false
 end
 
 local function copyScript()
-    setclipboard(scriptBox.Text)
+setclipboard(scriptBox.Text)
 end
 
 local function pasteScript()
-    scriptBox.Text = game:GetService("UserInputService"):GetClipboard()
+scriptBox.Text = game:GetService("UserInputService"):GetClipboard()
 end
+
 local function executeScript()
-    local scriptToExecute = scriptBox.Text
-    loadstring(scriptToExecute)()
+local scriptToExecute = scriptBox.Text
+loadstring(scriptToExecute)()
 end
 
-local function clearScriptBox()
-    scriptBox.Text = ""
+local function clearScript()
+scriptBox.Text = ""
 end
 
-local function executeClipboard()
-    local clipboardText = game:GetService("UserInputService"):GetClipboard()
-    loadstring(clipboardText)()
+local function loadScript()
+-- Placeholder for loading script from a file or recent scripts
+end
+
+local function saveScript()
+-- Placeholder for saving script to a file or recent scripts
+end
+
+local function onPlayerDied()
+mainFrame.Visible = true
+toggleButton.Visible = false
 end
 
 -- Connection of Functions to Buttons
@@ -127,18 +170,25 @@ toggleButton.MouseButton1Click:Connect(openGUI)
 copyButton.MouseButton1Click:Connect(copyScript)
 pasteButton.MouseButton1Click:Connect(pasteScript)
 executeButton.MouseButton1Click:Connect(executeScript)
-clearButton.MouseButton1Click:Connect(clearScriptBox)
-executeClipboardButton.MouseButton1Click:Connect(executeClipboard)
+clearButton.MouseButton1Click:Connect(clearScript)
+loadButton.MouseButton1Click:Connect(loadScript)
+saveButton.MouseButton1Click:Connect(saveScript)
 
--- Reload the GUI when the player dies
-player.CharacterAdded:Connect(function(char)
-    char:WaitForChild("Humanoid").Died:Connect(function()
-        gui:Destroy()
-        initGUI()
-    end)
+-- Connect the player's death event
+player.CharacterAdded:Connect(function(character)
+local humanoid = character:WaitForChild("Humanoid")
+humanoid.Died:Connect(onPlayerDied)
 end)
 
--- Initialize GUI for the first time
-initializeGUI()
+-- Ensure connection on initial character
+if player.Character then
+local humanoid = player.Character:FindFirstChild("Humanoid")
+if humanoid then
+humanoid.Died:Connect(onPlayerDied)
+end
+end
+
+-- Welcome message
+print("Hello " .. player.Name .. ", Welcome to Imnotexploi4's Executor V0.8")
 
 -- Note: Ensure that the game allows the use of setclipboard and GetClipboard from UserInputService, as well as executing scripts through loadstring.
