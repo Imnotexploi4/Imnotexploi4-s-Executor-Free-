@@ -139,22 +139,34 @@ local function addLogEntry(text, color)
     logEntry.Parent = logWindow
 end
 
+-- Redirecting print function to display output in the log window
+local originalPrint = print
+print = function(...)
+    local args = {...}
+    local message = ""
+    for i, v in ipairs(args) do
+        message = message .. tostring(v) .. " "
+    end
+    addLogEntry(message, Color3.fromRGB(255, 255, 255))
+    originalPrint(message)
+end
+
 -- Function to dynamically adjust the size and position of the GUI based on device type
 local function adjustGUISize()
-    local screenSize = workspace.CurrentCamera.ViewportSize
-    if screenSize.Y <= 720 then
+    local screenSize = workspace.CurrentCamera.ViewportSize if screenSize.Y <= 720 then
         -- Mobile device - smaller size
         mainFrame.Size = UDim2.new(0, 300, 0, 400)
         mainFrame.Position = UDim2.new(0.5, -150, 0.5, -200)
         logWindow.Size = UDim2.new(0, 280, 0, 100)
         logWindow.Position = UDim2.new(0, 10, 1, -150)
-        addUICorner(logWindow, 5) codeInput.Size = UDim2.new(0, 280, 0, 150)
+        addUICorner(logWindow, 5)
+        codeInput.Size = UDim2.new(0, 280, 0, 150)
         codeInput.Position = UDim2.new(0, 10, 0, 60)
-
+        
         for _, button in ipairs({executeButton, saveButton, copyButton, pasteButton, clearButton, page2Button, backButton}) do
             button.Size = UDim2.new(0, 80, 0, 30)
         end
-
+        
         executeButton.Position = UDim2.new(0, 10, 1, -50)
         saveButton.Position = UDim2.new(0.33, 10, 1, -50)
         copyButton.Position = UDim2.new(0.66, 10, 1, -50)
@@ -171,18 +183,17 @@ local function adjustGUISize()
         addUICorner(logWindow, 5)
         codeInput.Size = UDim2.new(0, 430, 0, 200)
         codeInput.Position = UDim2.new(0, 10, 0, 60)
-
+        
         for _, button in ipairs({executeButton, saveButton, copyButton, pasteButton, clearButton, page2Button, backButton}) do
             button.Size = UDim2.new(0, 120, 0, 40)
         end
-
+        
         executeButton.Position = UDim2.new(0, 10, 1, -50)
         saveButton.Position = UDim2.new(0, 150, 1, -50)
         copyButton.Position = UDim2.new(0, 290, 1, -50)
         pasteButton.Position = UDim2.new(0, 290, 0, 270)
         clearButton.Position = UDim2.new(0, 290, 0, 320)
-        page2Button.Position = UDim2.new(0, 290, 1, -100)
-        backButton.Position = UDim2.new(0, 290, 1, -100)
+        page2Button.Position = UDim2.new(0, 290, 1, -100) backButton.Position = UDim2.new(0, 290, 1, -100)
     end
 end
 
@@ -193,9 +204,10 @@ adjustGUISize()
 workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(adjustGUISize)
 
 -- Make the GUI draggable
-local function makeFrameDraggable(frame) local UserInputService = game:GetService("UserInputService")
+local function makeFrameDraggable(frame)
+    local UserInputService = game:GetService("UserInputService")
     local dragging, dragInput, dragStart, startPos
-
+    
     local function update(input)
         local delta = input.Position - dragStart
         frame.Position = UDim2.new(
@@ -205,13 +217,13 @@ local function makeFrameDraggable(frame) local UserInputService = game:GetServic
             startPos.Y.Offset + delta.Y
         )
     end
-
+    
     frame.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             dragging = true
             dragStart = input.Position
             startPos = frame.Position
-
+            
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
                     dragging = false
@@ -219,13 +231,13 @@ local function makeFrameDraggable(frame) local UserInputService = game:GetServic
             end)
         end
     end)
-
+    
     frame.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
             dragInput = input
         end
     end)
-
+    
     UserInputService.InputChanged:Connect(function(input)
         if input == dragInput and dragging then
             update(input)
@@ -245,8 +257,7 @@ end
 
 -- Connect the close button click event
 closeButton.MouseButton1Click:Connect(function()
-    mainFrame.Visible = false
-    toggleButton.Visible = true
+    mainFrame.Visible = false toggleButton.Visible = true
 end)
 
 -- Connect the toggle button click event
@@ -255,9 +266,10 @@ toggleButton.MouseButton1Click:Connect(toggleGUI)
 -- Function to execute the code
 local function executeCode()
     local code = codeInput.Text
-
+    
     -- Safely execute the code inside a new environment
-    local function safeExecute(source) local func, err = loadstring(source)
+    local function safeExecute(source)
+        local func, err = loadstring(source)
         if func then
             setfenv(func, getfenv())  -- Set the environment of the function to the current environment
             local success, execErr = pcall(func)
@@ -273,7 +285,7 @@ local function executeCode()
             addLogEntry("Error: " .. err, Color3.fromRGB(255, 0, 0))
         end
     end
-
+    
     safeExecute(code)
 end
 
@@ -291,8 +303,8 @@ end
 
 -- Function to paste the code
 local function pasteCode()
-    -- Replace the following line with actual clipboard retrieval logic.
-    -- Note: In Roblox, there is no direct API to access clipboard data for security reasons.
+    -- Replace the following line with actual clipboard retrieval logic
+    -- Note: In Roblox, there is no direct API to access clipboard data for security reasons
     codeInput.Text = "example code from clipboard" -- Placeholder text
     warn("Pasting from clipboard functionality is limited in Roblox.")
     addLogEntry("Pasted placeholder code from clipboard", Color3.fromRGB(0, 255, 255))
@@ -318,7 +330,7 @@ local function goToPage2()
     page2Frame.Visible = true
 end
 
--- Function to switch back to main page
+-- Function to switch back to the main page
 local function goToMainPage()
     page2Frame.Visible = false
     mainFrame.Visible = true
