@@ -193,59 +193,7 @@ adjustGUISize()
 workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(adjustGUISize)
 
 -- Make the GUI draggable
-local function makeFrameDraggable(frame) local func, err = loadstring(source)
-        if func then
-            setfenv(func, getfenv())  -- Set the environment of the function to the current environment
-            local success, execErr = pcall(func)
-            if not success then
-                warn("Error executing code: " .. execErr)
-                addLogEntry("Error: " .. execErr, Color3.fromRGB(255, 0, 0))
-            else
-                print("Code executed successfully")
-                addLogEntry("Success: Code executed", Color3.fromRGB(0, 255, 0))
-            end
-        else
-            warn("Error parsing code: " .. err)
-            addLogEntry("Error: " .. err, Color3.fromRGB(255, 0, 0))
-        end
-    end
-
-    safeExecute(code)
-end
-
--- Function to copy the code
-local function copyCode()
-    if setclipboard then
-        setclipboard(codeInput.Text)
-        print("Code copied to clipboard")
-        addLogEntry("Code copied to clipboard", Color3.fromRGB(0, 255, 255))
-    else
-        warn("setclipboard function is not available in the environment.")
-        addLogEntry("Error: Clipboard functionality not available", Color3.fromRGB(255, 0, 0))
-    end
-end
-
--- Function to paste the code
-local function pasteCode()
-    -- Replace the following line with actual clipboard retrieval logic.
-    -- Note: In Roblox, there is no direct API to access clipboard data for security reasons.
-    codeInput.Text = "example code from clipboard" -- Placeholder text
-    warn("Pasting from clipboard functionality is limited in Roblox.")
-    addLogEntry("Pasted placeholder code from clipboard", Color3.fromRGB(0, 255, 255))
-end
-
--- Function to clear the code input
-local function clearCode()
-    codeInput.Text = ""
-    print("Code input cleared")
-    addLogEntry("Code input cleared", Color3.fromRGB(255, 255, 0))
-end
-
--- Function to save the code
-local function saveCode()
-    -- Save the code logic here
-    print("Code saved: " .. codeInput.Text)
-    addLogEntry("Code saved", Color3.fromRGB(0, 255, 255)) local UserInputService = game:GetService("UserInputService")
+local function makeFrameDraggable(frame) local UserInputService = game:GetService("UserInputService")
     local dragging, dragInput, dragStart, startPos
 
     local function update(input)
@@ -309,7 +257,59 @@ local function executeCode()
     local code = codeInput.Text
 
     -- Safely execute the code inside a new environment
-    local function safeExecute(source)
+    local function safeExecute(source) local func, err = loadstring(source)
+        if func then
+            setfenv(func, getfenv())  -- Set the environment of the function to the current environment
+            local success, execErr = pcall(func)
+            if not success then
+                warn("Error executing code: " .. execErr)
+                addLogEntry("Error: " .. execErr, Color3.fromRGB(255, 0, 0))
+            else
+                print("Code executed successfully")
+                addLogEntry("Success: Code executed", Color3.fromRGB(0, 255, 0))
+            end
+        else
+            warn("Error parsing code: " .. err)
+            addLogEntry("Error: " .. err, Color3.fromRGB(255, 0, 0))
+        end
+    end
+
+    safeExecute(code)
+end
+
+-- Function to copy the code
+local function copyCode()
+    if setclipboard then
+        setclipboard(codeInput.Text)
+        print("Code copied to clipboard")
+        addLogEntry("Code copied to clipboard", Color3.fromRGB(0, 255, 255))
+    else
+        warn("setclipboard function is not available in the environment.")
+        addLogEntry("Error: Clipboard functionality not available", Color3.fromRGB(255, 0, 0))
+    end
+end
+
+-- Function to paste the code
+local function pasteCode()
+    -- Replace the following line with actual clipboard retrieval logic.
+    -- Note: In Roblox, there is no direct API to access clipboard data for security reasons.
+    codeInput.Text = "example code from clipboard" -- Placeholder text
+    warn("Pasting from clipboard functionality is limited in Roblox.")
+    addLogEntry("Pasted placeholder code from clipboard", Color3.fromRGB(0, 255, 255))
+end
+
+-- Function to clear the code input
+local function clearCode()
+    codeInput.Text = ""
+    print("Code input cleared")
+    addLogEntry("Code input cleared", Color3.fromRGB(255, 255, 0))
+end
+
+-- Function to save the code
+local function saveCode()
+    -- Save the code logic here
+    print("Code saved: " .. codeInput.Text)
+    addLogEntry("Code saved", Color3.fromRGB(0, 255, 255))
 end
 
 -- Function to switch to page 2
