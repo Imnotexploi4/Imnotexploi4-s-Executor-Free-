@@ -1,194 +1,352 @@
--- Script for Imnotexploi4's Executor V0.8
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- Variables
-local player = game.Players.LocalPlayer
-local gui = Instance.new("ScreenGui", player.PlayerGui)
-local mainFrame = Instance.new("Frame", gui)
-local title = Instance.new("TextLabel", mainFrame)
-local closeButton = Instance.new("TextButton", mainFrame)
-local toggleButton = Instance.new("ImageButton", gui)
-local copyButton = Instance.new("TextButton", mainFrame)
-local pasteButton = Instance.new("TextButton", mainFrame)
-local executeButton = Instance.new("TextButton", mainFrame)
-local clearButton = Instance.new("TextButton", mainFrame)
-local scriptBox = Instance.new("TextBox", mainFrame)
-local loadButton = Instance.new("TextButton", mainFrame)
-local saveButton = Instance.new("TextButton", mainFrame)
-local recentScriptsFrame = Instance.new("Frame", mainFrame)
-local recentScriptsTitle = Instance.new("TextLabel", recentScriptsFrame)
-local recentScriptsList = Instance.new("ScrollingFrame", recentScriptsFrame)
-local UIListLayout = Instance.new("UIListLayout", recentScriptsList)
+-- Create a ScreenGui instance
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "ExecutorGUI"
+screenGui.ResetOnSpawn = false  -- Ensure the GUI persists across respawns
+screenGui.Parent = PlayerGui
 
--- Hypothetical URL for the Delta Exploit icon
-local deltaExploitIconURL = "http://www.example.com/delta_exploit_icon.png"
-
--- GUI Properties
-gui.Name = "Imnotexploi4ExecutorV08"
+-- Create the main executor frame
+local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
-mainFrame.Size = UDim2.new(0.5, 0, 0.6, 0)
-mainFrame.Position = UDim2.new(0.25, 0, 0.2, 0)
-mainFrame.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
-mainFrame.Active = true
-mainFrame.Draggable = true
+mainFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+mainFrame.Visible = true
+mainFrame.Parent = screenGui
 
-title.Name = "Title"
-title.Size = UDim2.new(1, 0, 0.1, 0)
-title.Position = UDim2.new(0, 0, 0, 0)
-title.Text = "Imnotexploi4's Executor V0.8"
-title.TextColor3 = Color3.fromRGB(255, 255, 255)
-title.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+-- Create a title label
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Name = "TitleLabel"
+titleLabel.BackgroundTransparency = 1
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextScaled = true
+titleLabel.Text = "Imnotexploi4's Executor V0.9"
+titleLabel.Parent = mainFrame
 
-closeButton.Name = "CloseButton"
-closeButton.Size = UDim2.new(0.1, 0, 0.1, 0)
-closeButton.Position = UDim2.new(0.9, 0, 0, 0)
-closeButton.Text = "X"
-closeButton.TextColor3 = Color3.fromRGB(255, 0, 0)
-closeButton.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+-- Create a TextBox for code input
+local codeInput = Instance.new("TextBox")
+codeInput.Name = "CodeInput"
+codeInput.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+codeInput.Text = ""
+codeInput.ClearTextOnFocus = false
+codeInput.MultiLine = true
+codeInput.Parent = mainFrame
 
-toggleButton.Name = "ToggleButton"toggleButton.Size = UDim2.new(0.1, 0, 0.1, 0)
-toggleButton.Position = UDim2.new(0, 0, 0, 0)
-toggleButton.Image = deltaExploitIconURL
-toggleButton.Visible = false
-toggleButton.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
-toggleButton.Active = true
-toggleButton.Draggable = true
-
-copyButton.Name = "CopyButton"
-copyButton.Size = UDim2.new(0.15, 0, 0.1, 0)
-copyButton.Position = UDim2.new(0.1, 0, 0.85, 0)
-copyButton.Text = "Copy"
-copyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-copyButton.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
-
-pasteButton.Name = "PasteButton"
-pasteButton.Size = UDim2.new(0.15, 0, 0.1, 0)
-pasteButton.Position = UDim2.new(0.3, 0, 0.85, 0)
-pasteButton.Text = "Paste"
-pasteButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-pasteButton.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
-
+-- Create an execute button
+local executeButton = Instance.new("TextButton")
 executeButton.Name = "ExecuteButton"
-executeButton.Size = UDim2.new(0.15, 0, 0.1, 0)
-executeButton.Position = UDim2.new(0.5, 0, 0.85, 0)
+executeButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
 executeButton.Text = "Execute"
-executeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-executeButton.BackgroundColor3 = Color3.fromRGB(64, 128, 64)
+executeButton.Parent = mainFrame
 
-clearButton.Name = "ClearButton"
-clearButton.Size = UDim2.new(0.15, 0, 0.1, 0)
-clearButton.Position = UDim2.new(0.7, 0, 0.85, 0)
-clearButton.Text = "Clear"
-clearButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-clearButton.BackgroundColor3 = Color3.fromRGB(128, 64, 64)
-
-loadButton.Name = "LoadButton"
-loadButton.Size = UDim2.new(0.15, 0, 0.1, 0)
-loadButton.Position = UDim2.new(0.1, 0, 0.73, 0)
-loadButton.Text = "Load"
-loadButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-loadButton.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
-
+-- Create a save script button
+local saveButton = Instance.new("TextButton")
 saveButton.Name = "SaveButton"
-saveButton.Size = UDim2.new(0.15, 0, 0.1, 0)
-saveButton.Position = UDim2.new(0.3, 0, 0.73, 0)
-saveButton.Text = "Save"
-saveButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-saveButton.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+saveButton.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
+saveButton.Text = "Save Script"
+saveButton.Parent = mainFrame
 
-recentScriptsFrame.Name = "RecentScriptsFrame"
-recentScriptsFrame.Size = UDim2.new(0.9, 0, 0.2, 0) recentScriptsFrame.Position = UDim2.new(0.05, 0, 0.1, 0)
-recentScriptsFrame.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+-- Create a copy button
+local copyButton = Instance.new("TextButton")
+copyButton.Name = "CopyButton"
+copyButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+copyButton.Text = "Copy"
+copyButton.Parent = mainFrame
 
-recentScriptsTitle.Name = "RecentScriptsTitle"
-recentScriptsTitle.Size = UDim2.new(1, 0, 0.2, 0)
-recentScriptsTitle.Position = UDim2.new(0, 0, 0, 0)
-recentScriptsTitle.Text = "Recent Scripts"
-recentScriptsTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-recentScriptsTitle.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
+-- Create a paste button
+local pasteButton = Instance.new("TextButton")
+pasteButton.Name = "PasteButton"
+pasteButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70) pasteButton.Text = "Paste"
+pasteButton.Parent = mainFrame
 
-recentScriptsList.Name = "RecentScriptsList"
-recentScriptsList.Size = UDim2.new(1, 0, 0.8, 0)
-recentScriptsList.Position = UDim2.new(0, 0, 0.2, 0)
-recentScriptsList.BackgroundColor3 = Color3.fromRGB(36, 36, 36)
-recentScriptsList.CanvasSize = UDim2.new(0, 0, 2, 0)
+-- Create the close button
+local closeButton = Instance.new("TextButton")
+closeButton.Name = "CloseButton"
+closeButton.Size = UDim2.new(0, 50, 0, 50)
+closeButton.Position = UDim2.new(1, -60, 0, 10)
+closeButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+closeButton.Text = "X"
+closeButton.Parent = mainFrame
 
-UIListLayout.FillDirection = Enum.FillDirection.Vertical
-UIListLayout.Padding = UDim.new(0.1, 0)
-
-scriptBox.Name = "ScriptBox"
-scriptBox.Size = UDim2.new(0.9, 0, 0.5, 0)
-scriptBox.Position = UDim2.new(0.05, 0, 0.4, 0)
-scriptBox.Text = "Enter script here"
-scriptBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-scriptBox.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
-scriptBox.MultiLine = true
-
--- Functions
-local function closeGUI()
-mainFrame.Visible = false
-toggleButton.Visible = true
-end
-
-local function openGUI()
-mainFrame.Visible = true
+-- Create the toggle button with an image
+local toggleButton = Instance.new("ImageButton")
+toggleButton.Name = "ToggleButton"
+toggleButton.Image = "https://i.ibb.co/bBj0k4c/7-DC14-B6-F-840-B-46-BA-B88-E-6-C148-E48832-B.webp"
 toggleButton.Visible = false
+toggleButton.Parent = screenGui
+
+-- Create the second page frame
+local page2Frame = Instance.new("Frame")
+page2Frame.Name = "Page2Frame"
+page2Frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+page2Frame.Visible = false
+page2Frame.Parent = screenGui
+
+-- Create a button to switch to page 2
+local page2Button = Instance.new("TextButton")
+page2Button.Name = "Page2Button"
+page2Button.BackgroundColor3 = Color3.fromRGB(0, 0, 200)
+page2Button.Text = "Page 2"
+page2Button.Parent = mainFrame
+
+-- Create a button to switch back to the main page
+local backButton = Instance.new("TextButton")
+backButton.Name = "BackButton"
+backButton.BackgroundColor3 = Color3.fromRGB(0, 0, 200)
+backButton.Text = "Back"
+backButton.Parent = page2Frame
+
+-- Function to dynamically adjust the size and position of the GUI based on device type
+local function adjustGUISize()
+    local screenSize = workspace.CurrentCamera.ViewportSize
+    if screenSize.Y <= 720 then
+        -- Mobile device - smaller size
+        mainFrame.Size = UDim2.new(0, 300, 0, 300)
+        mainFrame.Position = UDim2.new(0.5, -150, 0.5, -150)
+
+        titleLabel.Size = UDim2.new(0, 280, 0, 30)
+        titleLabel.Position = UDim2.new(0, 10, 0, 5)
+
+        codeInput.Size = UDim2.new(0, 280, 0, 150)
+        codeInput.Position = UDim2.new(0, 10, 0, 45)
+
+        executeButton.Size = UDim2.new(0, 80, 0, 40) executeButton.Position = UDim2.new(0.1, 0, 1, -50)
+
+        saveButton.Size = UDim2.new(0, 80, 0, 40)
+        saveButton.Position = UDim2.new(0.6, 0, 1, -50)
+
+        copyButton.Size = UDim2.new(0, 80, 0, 40)
+        copyButton.Position = UDim2.new(0.05, 0, 0.65, 0)
+
+        pasteButton.Size = UDim2.new(0, 80, 0, 40)
+        pasteButton.Position = UDim2.new(0.6, 0, 0.65, 0)
+
+        toggleButton.Size = UDim2.new(0, 50, 0, 50)
+        toggleButton.Position = UDim2.new(0, 10, 0, 10)
+
+        page2Frame.Size = UDim2.new(0, 300, 0, 300)
+        page2Frame.Position = UDim2.new(0.5, -150, 0.5, -150)
+
+        page2Button.Size = UDim2.new(0, 80, 0, 40)
+        page2Button.Position = UDim2.new(0.67, -50, 1, -50)
+
+        backButton.Size = UDim2.new(0, 80, 0, 40)
+        backButton.Position = UDim2.new(0.67, -50, 1, -50)
+    else
+        -- PC - normal size
+        mainFrame.Size = UDim2.new(0, 400, 0, 400)
+        mainFrame.Position = UDim2.new(0.5, -200, 0.5, -200)
+
+        titleLabel.Size = UDim2.new(0, 380, 0, 40)
+        titleLabel.Position = UDim2.new(0, 10, 0, 5)
+
+        codeInput.Size = UDim2.new(0, 380, 0, 200)
+        codeInput.Position = UDim2.new(0, 10, 0, 50)
+
+        executeButton.Size = UDim2.new(0, 100, 0, 50)
+        executeButton.Position = UDim2.new(0.25, -50, 1, -60)
+
+        saveButton.Size = UDim2.new(0, 100, 0, 50)
+        saveButton.Position = UDim2.new(0.75, -50, 1, -60)
+
+        copyButton.Size = UDim2.new(0, 100, 0, 50)
+        copyButton.Position = UDim2.new(0, 10, 1, -110)
+
+        pasteButton.Size = UDim2.new(0, 100, 0, 50)
+        pasteButton.Position = UDim2.new(1, -110, 1, -110)
+
+        toggleButton.Size = UDim2.new(0, 100, 0, 100)
+        toggleButton.Position = UDim2.new(0, 10, 0, 10)
+
+        page2Frame.Size = UDim2.new(0, 400, 0, 400)
+        page2Frame.Position = UDim2.new(0.5, -200, 0.5, -200)
+
+        page2Button.Size = UDim2.new(0, 100, 0, 50)
+        page2Button.Position = UDim2.new(0.75, -50, 1, -60) backButton.Size = UDim2.new(0, 100, 0, 50)
+        backButton.Position = UDim2.new(0.75, -50, 1, -60)
+    end
 end
 
-local function copyScript()
-setclipboard(scriptBox.Text)
+-- Initial GUI adjustment
+adjustGUISize()
+
+-- Connect to screen size change event
+workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(adjustGUISize)
+
+-- Make the GUI draggable
+local function makeFrameDraggable(frame)
+    local UserInputService = game:GetService("UserInputService")
+    local dragging, dragInput, dragStart, startPos
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        frame.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+
+    frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = frame.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
 end
 
-local function pasteScript()
-scriptBox.Text = game:GetService("UserInputService"):GetClipboard()
+if mainFrame and page2Frame and toggleButton then
+    makeFrameDraggable(mainFrame)
+    makeFrameDraggable(page2Frame)
+    makeFrameDraggable(toggleButton)
+else
+    warn("Failed to create or find mainFrame, page2Frame, or toggleButton.")
 end
 
-local function executeScript()
-local scriptToExecute = scriptBox.Text
-loadstring(scriptToExecute)()
+-- Function to toggle the main GUI visibility
+local function toggleGUI()
+    mainFrame.Visible = not mainFrame.Visible toggleButton.Visible = not mainFrame.Visible
 end
 
-local function clearScript()
-scriptBox.Text = ""
+-- Connect the close button click event
+if closeButton then
+    closeButton.MouseButton1Click:Connect(function()
+        mainFrame.Visible = false
+        toggleButton.Visible = true
+    end)
+else
+    warn("Failed to create CloseButton.")
 end
 
-local function loadScript()
--- Placeholder for loading script from a file or recent scripts
+-- Connect the toggle button click event
+if toggleButton then
+    toggleButton.MouseButton1Click:Connect(toggleGUI)
+else
+    warn("Failed to create or find ToggleButton.")
 end
 
-local function saveScript()
--- Placeholder for saving script to a file or recent scripts
+-- Function to execute the code
+local function executeCode()
+    local code = codeInput.Text
+
+    -- Safely execute the code inside a new environment
+    local function safeExecute(source)
+        local func, err = loadstring(source)
+        if func then
+            setfenv(func, getfenv())  -- Set the environment of the function to the current environment
+            local success, execErr = pcall(func)
+            if not success then
+                warn("Error executing code: " .. execErr)
+            end
+        else
+            warn("Error parsing code: " .. err)
+        end
+    end
+
+    safeExecute(code)
 end
 
-local function onPlayerDied()
-mainFrame.Visible = true
-toggleButton.Visible = false
+-- Function to copy the code
+local function copyCode()
+    setclipboard(codeInput.Text)
+    print("Code copied to clipboard")
 end
 
--- Connection of Functions to Buttons
-closeButton.MouseButton1Click:Connect(closeGUI)
-toggleButton.MouseButton1Click:Connect(openGUI)
-copyButton.MouseButton1Click:Connect(copyScript)
-pasteButton.MouseButton1Click:Connect(pasteScript)
-executeButton.MouseButton1Click:Connect(executeScript)
-clearButton.MouseButton1Click:Connect(clearScript)
-loadButton.MouseButton1Click:Connect(loadScript)
-saveButton.MouseButton1Click:Connect(saveScript)
-
--- Connect the player's death event
-player.CharacterAdded:Connect(function(character)
-local humanoid = character:WaitForChild("Humanoid")
-humanoid.Died:Connect(onPlayerDied)
-end)
-
--- Ensure connection on initial character
-if player.Character then
-local humanoid = player.Character:FindFirstChild("Humanoid")
-if humanoid then
-humanoid.Died:Connect(onPlayerDied)
-end
+-- Function to paste the code
+local function pasteCode()
+    -- Use a placeholder text for clipboard content. Replace this with actual clipboard retrieval logic.
+    local clipboardText = "example code from clipboard" -- Replace with actual clipboard retrieval logic.
+    codeInput.Text = clipboardText
+    print("Code pasted from clipboard")
 end
 
--- Welcome message
-print("Hello " .. player.Name .. ", Welcome to Imnotexploi4's Executor V0.8")
+-- Function to save the code
+local function saveCode()
+    -- Save the code logic here
+    print("Code saved: " .. codeInput.Text)
+end
 
--- Note: Ensure that the game allows the use of setclipboard and GetClipboard from UserInputService, as well as executing scripts through loadstring.
+-- Function to switch to page 2
+local function goToPage2()
+    mainFrame.Visible = false
+    page2Frame.Visible = true
+end
+
+-- Function to switch back to main page
+local function goToMainPage()
+    page2Frame.Visible = false
+    mainFrame.Visible = true
+end
+-- Connect the button click events
+if executeButton then
+    executeButton.MouseButton1Click:Connect(executeCode)
+else
+    warn("Failed to create ExecuteButton.")
+end
+
+if copyButton then
+    copyButton.MouseButton1Click:Connect(copyCode)
+else
+    warn("Failed to create CopyButton.")
+end
+
+if pasteButton then
+    pasteButton.MouseButton1Click:Connect(pasteCode)
+else
+    warn("Failed to create PasteButton.")
+end
+
+if saveButton then
+    saveButton.MouseButton1Click:Connect(saveCode)
+else
+    warn("Failed to create SaveButton.")
+end
+
+if page2Button then
+    page2Button.MouseButton1Click:Connect(goToPage2)
+else
+    warn("Failed to create Page2Button.")
+end
+
+if backButton then
+    backButton.MouseButton1Click:Connect(goToMainPage)
+else
+    warn("Failed to create BackButton.")
+end
+
+-- Function to ensure GUI reopens on respawn
+local function reopenGUI()
+    if mainFrame and toggleButton then
+        mainFrame.Visible = true
+        toggleButton.Visible = false
+    else
+        warn("MainFrame or ToggleButton is not available on respawn.")
+    end
+end
+
+-- Connect to character respawn to reopen the GUI
+LocalPlayer.CharacterAdded:Connect(reopenGUI)
+
+-- Print welcome message
+print("Hello " .. LocalPlayer.Name .. ", Welcome to Imnotexploi4's Executor V0.9")
