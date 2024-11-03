@@ -60,22 +60,22 @@ inputCorner.CornerRadius = UDim.new(0, 8) inputCorner.Parent = codeInput
 
 -- Create buttons
 local function createButton(name, text, position, color)
-    local button = Instance.new("TextButton")
-    button.Name = name
-    button.BackgroundColor3 = color
-    button.Text = text
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    button.Font = Enum.Font.Gotham
-    button.TextSize = 18
-    button.Position = position
-    button.Size = UDim2.new(0, 140, 0, 50)
-    button.Parent = mainFrame
+local button = Instance.new("TextButton")
+button.Name = name
+button.BackgroundColor3 = color
+button.Text = text
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.Font = Enum.Font.Gotham
+button.TextSize = 18
+button.Position = position
+button.Size = UDim2.new(0, 140, 0, 50)
+button.Parent = mainFrame
 
-    local buttonCorner = Instance.new("UICorner")
-    buttonCorner.CornerRadius = UDim.new(0, 8)
-    buttonCorner.Parent = button
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 8)
+buttonCorner.Parent = button
 
-    return button
+return button
 end
 
 local executeButton = createButton("ExecuteButton", "Execute", UDim2.new(0, 10, 1, -60), Color3.fromRGB(0, 200, 0))
@@ -100,48 +100,48 @@ local closeCorner = Instance.new("UICorner")
 closeCorner.CornerRadius = UDim.new(0, 8)
 closeCorner.Parent = closeButton
 
--- Toggle Button setup, using Roblox icon image
+-- Toggle Button setup, using the provided decal ID
 toggleButton.Name = "ToggleButton"
 toggleButton.Size = UDim2.new(0, 50, 0, 50)
 toggleButton.Position = UDim2.new(0, 10, 0, 10)
-toggleButton.Image = "rbxassetid://48474313" -- Roblox icon asset toggleButton.Visible = false
-toggleButton.Parent = screenGui
-toggleButton.ZIndex = 10
+toggleButton.Image = "rbxassetid://134969145458107" -- Imnotexploi4 icon
+toggleButton.Visible = false
+toggleButton.Parent = screenGui toggleButton.ZIndex = 10
 
 -- Make UI Elements Draggable
 local function makeDraggable(frame)
-    local dragging, dragInput, dragStart, startPos
+local dragging, dragInput, dragStart, startPos
 
-    local function update(input)
-        local delta = input.Position - dragStart
-        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
+local function update(input)
+local delta = input.Position - dragStart
+frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
 
-    frame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = frame.Position
+frame.InputBegan:Connect(function(input)
+if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+dragging = true
+dragStart = input.Position
+startPos = frame.Position
 
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
+input.Changed:Connect(function()
+if input.UserInputState == Enum.UserInputState.End then
+dragging = false
+end
+end)
+end
+end)
 
-    frame.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
-    end)
+frame.InputChanged:Connect(function(input)
+if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+dragInput = input
+end
+end)
 
-    UserInputService.InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
-            update(input)
-        end
-    end)
+UserInputService.InputChanged:Connect(function(input)
+if input == dragInput and dragging then
+update(input)
+end
+end)
 end
 
 -- Apply draggable functionality
@@ -150,8 +150,8 @@ makeDraggable(toggleButton)
 
 -- Function to toggle main GUI visibility
 local function toggleGUI()
-    mainFrame.Visible = not mainFrame.Visible
-    toggleButton.Visible = not mainFrame.Visible
+mainFrame.Visible = not mainFrame.Visible
+toggleButton.Visible = not mainFrame.Visible
 end
 
 -- Connect the close button click event
@@ -162,54 +162,45 @@ toggleButton.MouseButton1Click:Connect(toggleGUI)
 
 -- Function to execute code
 local function executeCode()
-    local code = codeInput.Text
+local code = codeInput.Text
 
-    -- Safely execute the code inside a new environment
-    local function safeExecute(source)
-        local func, err = loadstring(source)
-        if func then setfenv(func, getfenv())  -- Set the environment of the function to the current environment
-            local success, execErr = pcall(func)
-            if not success then
-                warn("Error executing code: " .. execErr)
-            else
-                print("Code executed successfully")
-            end
-        else
-            warn("Error parsing code: " .. err)
-        end
-    end
+-- Safely execute the code inside a new environment
+local function safeExecute(source)
+local func, err = loadstring(source)
+if func then
+setfenv(func, getfenv())  -- Set the environment of the function to the current environment
+pcall(func)
+else
+warn("Error parsing code: " .. err)
+end
+end
 
-    safeExecute(code)
+safeExecute(code)
 end
 
 -- Function to copy code
 local function copyCode()
-    if setclipboard then
-        setclipboard(codeInput.Text)
-        print("Code copied to clipboard")
-    else
-        warn("setclipboard function is not available in the environment.")
-    end
+if setclipboard then
+setclipboard(codeInput.Text)
+else
+warn("setclipboard function is not available in the environment.") end
 end
 
 -- Function to clear code input
 local function clearCode()
-    codeInput.Text = ""
-    print("Code input cleared")
+codeInput.Text = ""
 end
 
 -- Function to save code
 local function saveCode()
-    -- Implement logic to save the code
-    print("Code saved: " .. codeInput.Text)
+-- Implement logic to save the code
 end
 
 -- Function to load code
 local function loadCode()
-    -- Implement logic to load the code
-    local loadedCode = "print('Hello, world!')" -- Replace with actual loaded content
-    codeInput.Text = loadedCode
-    print("Code loaded: " .. loadedCode)
+-- Implement logic to load the code
+local loadedCode = "print('Hello, world!')" -- Replace with actual loaded content
+codeInput.Text = loadedCode
 end
 
 -- Connect button click events
@@ -221,48 +212,48 @@ loadButton.MouseButton1Click:Connect(loadCode)
 
 -- Adjust GUI size based on device type
 local function adjustGUISize()
-    local screenSize = workspace.CurrentCamera.ViewportSize
-    if screenSize.Y <= 720 then
-        -- Mobile device - smaller size
-        mainFrame.Size = UDim2.new(0, 320, 0, 420)
-        mainFrame.Position = UDim2.new(0.5, -160, 0.5, -210)
-        titleLabel.Size = UDim2.new(1, -20, 0, 40)
-        titleLabel.Position = UDim2.new(0, 10, 0, 10)
-        codeInput.Size = UDim2.new(1, -20, 0, 150)
-        codeInput.Position = UDim2.new(0, 10, 0, 60)
+local screenSize = workspace.CurrentCamera.ViewportSize
+if screenSize.Y <= 720 then
+-- Mobile device - smaller size
+mainFrame.Size = UDim2.new(0, 320, 0, 420)
+mainFrame.Position = UDim2.new(0.5, -160, 0.5, -210)
+titleLabel.Size = UDim2.new(1, -20, 0, 40)
+titleLabel.Position = UDim2.new(0, 10, 0, 10)
+codeInput.Size = UDim2.new(1, -20, 0, 150)
+codeInput.Position = UDim2.new(0, 10, 0, 60)
 
-        for _, button in ipairs(mainFrame:GetChildren()) do
-            if button:IsA("TextButton") and button.Name ~= "CloseButton" then
-                button.Size = UDim2.new(0, 100, 0, 30)
-            end
-        end
+for _, button in ipairs(mainFrame:GetChildren()) do
+if button:IsA("TextButton") and button.Name ~= "CloseButton" then
+button.Size = UDim2.new(0, 100, 0, 30)
+end
+end
 
-        executeButton.Position = UDim2.new(0, 10, 1, -50)
-        saveButton.Position = UDim2.new(0.33, 0, 1, -50)
-        copyButton.Position = UDim2.new(0.66, 0, 1, -50)
-        clearButton.Position = UDim2.new(0, 10, 1, -100)
-        loadButton.Position = UDim2.new(0.33, 0, 1, -100)
-    else
-        -- PC - normal size
-        mainFrame.Size = UDim2.new(0, 500, 0, 600)
-        mainFrame.Position = UDim2.new(0.5, -250, 0.5, -300)
-        titleLabel.Size = UDim2.new(1, -20, 0, 50)
-        titleLabel.Position = UDim2.new(0, 10, 0, 10)
-        codeInput.Size = UDim2.new(1, -20, 0, 250)
-        codeInput.Position = UDim2.new(0, 10, 0, 70)
+executeButton.Position = UDim2.new(0, 10, 1, -50)
+saveButton.Position = UDim2.new(0.33, 0, 1, -50)
+copyButton.Position = UDim2.new(0.66, 0, 1, -50)
+clearButton.Position = UDim2.new(0, 10, 1, -100)
+loadButton.Position = UDim2.new(0.33, 0, 1, -100)
+else
+-- PC - normal size
+mainFrame.Size = UDim2.new(0, 500, 0, 600)
+mainFrame.Position = UDim2.new(0.5, -250, 0.5, -300)
+titleLabel.Size = UDim2.new(1, -20, 0, 50)
+titleLabel.Position = UDim2.new(0, 10, 0, 10)
+codeInput.Size = UDim2.new(1, -20, 0, 250)
+codeInput.Position = UDim2.new(0, 10, 0, 70)
 
-        for _, button in ipairs(mainFrame:GetChildren()) do
-            if button:IsA("TextButton") and button.Name ~= "CloseButton" then
-                button.Size = UDim2.new(0, 140, 0, 50)
-            end
-        end
+for _, button in ipairs(mainFrame:GetChildren()) do
+if button:IsA("TextButton") and button.Name ~= "CloseButton" then
+button.Size = UDim2.new(0, 140, 0, 50)
+end
+end
 
-        executeButton.Position = UDim2.new(0, 10, 1, -60)
-        saveButton.Position = UDim2.new(0, 160, 1, -60)
-        copyButton.Position = UDim2.new(0, 310, 1, -60)
-        clearButton.Position = UDim2.new(0, 10, 1, -120)
-        loadButton.Position = UDim2.new(0, 160, 1, -120)
-    end
+executeButton.Position = UDim2.new(0, 10, 1, -60)
+saveButton.Position = UDim2.new(0, 160, 1, -60)
+copyButton.Position = UDim2.new(0, 310, 1, -60)
+clearButton.Position = UDim2.new(0, 10, 1, -120)
+loadButton.Position = UDim2.new(0, 160, 1, -120)
+end
 end
 
 -- Initial GUI adjustment
@@ -271,5 +262,5 @@ adjustGUISize()
 -- Connect to screen size change event
 workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(adjustGUISize)
 
--- Print a welcome message
+-- Welcome message
 print("Hello " .. LocalPlayer.Name .. ", Welcome to Imnotexploi4's Executor V1.1")
