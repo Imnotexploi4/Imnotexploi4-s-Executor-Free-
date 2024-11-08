@@ -6,27 +6,75 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 -- Create GUI Elements
 local screenGui = Instance.new("ScreenGui")
 local mainFrame = Instance.new("Frame")
-local toggleButton = Instance.new("ImageButton")
+local keyFrame = Instance.new("Frame")
 
--- ScreenGui setup
+-- Key System GUI Setup
+keyFrame.Name = "KeyFrame"
+keyFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+keyFrame.Size = UDim2.new(0, 400, 0, 200)
+keyFrame.Position = UDim2.new(0.5, -200, 0.5, -100)
+keyFrame.Visible = true
+keyFrame.Parent = screenGui
+
+local keyFrameCorner = Instance.new("UICorner")
+keyFrameCorner.CornerRadius = UDim.new(0, 20)
+keyFrameCorner.Parent = keyFrame
+
+local keyTitleLabel = Instance.new("TextLabel")
+keyTitleLabel.Name = "KeyTitleLabel"
+keyTitleLabel.Size = UDim2.new(1, -20, 0, 40)
+keyTitleLabel.Position = UDim2.new(0, 10, 0, 10)
+keyTitleLabel.BackgroundTransparency = 1
+keyTitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyTitleLabel.Font = Enum.Font.GothamBold
+keyTitleLabel.TextSize = 24
+keyTitleLabel.Text = "Enter Your Key"
+keyTitleLabel.Parent = keyFrame
+
+local keyInput = Instance.new("TextBox")
+keyInput.Name = "KeyInput"
+keyInput.Size = UDim2.new(1, -40, 0, 50)
+keyInput.Position = UDim2.new(0, 20, 0, 60)
+keyInput.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+keyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyInput.Text = ""
+keyInput.ClearTextOnFocus = false
+keyInput.Font = Enum.Font.Code
+keyInput.TextSize = 18
+keyInput.PlaceholderText = "put the key here"
+keyInput.Parent = keyFrame
+
+local keyButton = Instance.new("TextButton")
+keyButton.Name = "KeyButton"
+keyButton.BackgroundColor3 = Color3.fromRGB(0, 191, 255)
+keyButton.Text = "Check Key"
+keyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyButton.Font = Enum.Font.Gotham
+keyButton.TextSize = 18
+keyButton.Size = UDim2.new(0, 150, 0, 50)
+keyButton.Position = UDim2.new(0.5, -75, 0, 120)
+keyButton.Parent = keyFrame
+
+local keyButtonCorner = Instance.new("UICorner")
+keyButtonCorner.CornerRadius = UDim.new(0, 12)
+keyButtonCorner.Parent = keyButton
+
+-- Main Executor GUI Setup
 screenGui.Name = "ExecutorGUI"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = PlayerGui
 
--- MainFrame setup
 mainFrame.Name = "MainFrame"
 mainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 mainFrame.Size = UDim2.new(0, 600, 0, 700)
 mainFrame.Position = UDim2.new(0.5, -300, 0.5, -350)
-mainFrame.Visible = true
+mainFrame.Visible = false
 mainFrame.Parent = screenGui
 
--- Add rounded corners to mainFrame
 local mainFrameCorner = Instance.new("UICorner")
 mainFrameCorner.CornerRadius = UDim.new(0, 20)
 mainFrameCorner.Parent = mainFrame
 
--- Create a title label
 local titleLabel = Instance.new("TextLabel")
 titleLabel.Name = "TitleLabel"
 titleLabel.Size = UDim2.new(1, -20, 0, 60)
@@ -35,10 +83,9 @@ titleLabel.BackgroundTransparency = 1
 titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 titleLabel.Font = Enum.Font.GothamBold
 titleLabel.TextSize = 30
-titleLabel.Text = "Imnotexploi4's Executor V1.3"
+titleLabel.Text = "Imnotexploi4's Executor V1.4"
 titleLabel.Parent = mainFrame
 
--- Create a TextBox for code input
 local codeInput = Instance.new("TextBox")
 codeInput.Name = "CodeInput"
 codeInput.Size = UDim2.new(1, -40, 0, 350)
@@ -54,11 +101,10 @@ codeInput.TextSize = 20
 codeInput.PlaceholderText = "Enter your script here..."
 codeInput.Parent = mainFrame
 
--- Add rounded corners to the TextBox
-local inputCorner = Instance.new("UICorner") inputCorner.CornerRadius = UDim.new(0, 15)
+local inputCorner = Instance.new("UICorner")
+inputCorner.CornerRadius = UDim.new(0, 15)
 inputCorner.Parent = codeInput
 
--- Create buttons with improved style
 local function createButton(name, text, position, size, color, hoverColor)
 local button = Instance.new("TextButton")
 button.Name = name
@@ -68,8 +114,7 @@ button.TextColor3 = Color3.fromRGB(255, 255, 255)
 button.Font = Enum.Font.Gotham
 button.TextSize = 18
 button.Position = position
-button.Size = size
-button.Parent = mainFrame
+button.Size = size button.Parent = mainFrame
 
 local buttonCorner = Instance.new("UICorner")
 buttonCorner.CornerRadius = UDim.new(0, 12)
@@ -95,13 +140,13 @@ local copyButton = createButton("CopyButton", "Copy", UDim2.new(1, -200, 1, -170
 local clearButton = createButton("ClearButton", "Clear", UDim2.new(0, 20, 1, -240), UDim2.new(0, 180, 0, 50), Color3.fromRGB(255, 69, 0), Color3.fromRGB(204, 50, 0))
 local loadButton = createButton("LoadButton", "Load Script", UDim2.new(1, -200, 1, -240), UDim2.new(0, 180, 0, 50), Color3.fromRGB(112, 128, 144), Color3.fromRGB(80, 100, 114))
 
--- Create the close button
 local closeButton = Instance.new("TextButton")
 closeButton.Name = "CloseButton"
 closeButton.Size = UDim2.new(0, 40, 0, 40)
 closeButton.Position = UDim2.new(1, -50, 0, 10)
 closeButton.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
-closeButton.Text = "X"closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeButton.Text = "X"
+closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 closeButton.Font = Enum.Font.GothamBold
 closeButton.TextSize = 18
 closeButton.Parent = mainFrame
@@ -110,42 +155,42 @@ local closeCorner = Instance.new("UICorner")
 closeCorner.CornerRadius = UDim.new(0, 15)
 closeCorner.Parent = closeButton
 
--- Error message label
 local errorLabel = Instance.new("TextLabel")
 errorLabel.Name = "ErrorLabel"
 errorLabel.Size = UDim2.new(1, -20, 0, 40)
 errorLabel.Position = UDim2.new(0, 10, 1, -80)
-errorLabel.BackgroundTransparency = 1
-errorLabel.TextColor3 = Color3.fromRGB(255, 69, 0)
+errorLabel.BackgroundTransparency = 1 errorLabel.TextColor3 = Color3.fromRGB(255, 69, 0)
 errorLabel.Font = Enum.Font.GothamBold
 errorLabel.TextSize = 18
 errorLabel.Text = ""
 errorLabel.Visible = false
 errorLabel.Parent = mainFrame
 
--- Toggle Button setup, using the provided decal ID
+local toggleButton = Instance.new("ImageButton")
 toggleButton.Name = "ToggleButton"
 toggleButton.Size = UDim2.new(0, 50, 0, 50)
 toggleButton.Position = UDim2.new(0, 10, 0, 10)
-toggleButton.Image = "rbxassetid://111767375753277" -- Imnotexploi4 new icon
+toggleButton.Image = "rbxassetid://111767375753277" -- Imnotexploi4 icon
 toggleButton.Visible = false
 toggleButton.Parent = screenGui
 toggleButton.ZIndex = 10
 
--- Make UI Elements Draggable
-local function makeDraggable(frame)
-local dragging, dragInput, dragStart, startPos
+local function makeDraggable(guiElement)
+local dragging = false
+local dragInput
+local dragStart
+local startPos
 
 local function update(input)
 local delta = input.Position - dragStart
-frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+guiElement.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 end
 
-frame.InputBegan:Connect(function(input)
+guiElement.InputBegan:Connect(function(input)
 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
 dragging = true
 dragStart = input.Position
-startPos = frame.Position
+startPos = guiElement.Position
 
 input.Changed:Connect(function()
 if input.UserInputState == Enum.UserInputState.End then
@@ -155,7 +200,7 @@ end)
 end
 end)
 
-frame.InputChanged:Connect(function(input)
+guiElement.InputChanged:Connect(function(input)
 if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
 dragInput = input
 end
@@ -164,35 +209,29 @@ end)
 UserInputService.InputChanged:Connect(function(input)
 if input == dragInput and dragging then
 update(input)
-end end)
+end
+end)
 end
 
--- Apply draggable functionality
 makeDraggable(mainFrame)
+makeDraggable(keyFrame)
 makeDraggable(toggleButton)
 
--- Function to toggle main GUI visibility
 local function toggleGUI()
 mainFrame.Visible = not mainFrame.Visible
 toggleButton.Visible = not mainFrame.Visible
 end
 
--- Connect the close button click event
 closeButton.MouseButton1Click:Connect(toggleGUI)
-
--- Connect the toggle button click event
 toggleButton.MouseButton1Click:Connect(toggleGUI)
 
--- Function to execute code
 local function executeCode()
 local code = codeInput.Text
 
--- Safely execute the code inside a new environment
 local function safeExecute(source)
 local func, err = loadstring(source)
 if func then
-setfenv(func, getfenv())  -- Set the environment of the function to the current environment
-local success, execErr = pcall(func)
+setfenv(func, getfenv()) local success, execErr = pcall(func)
 if not success then
 errorLabel.Text = "Error executing code: " .. execErr
 errorLabel.Visible = true
@@ -209,7 +248,6 @@ end
 safeExecute(code)
 end
 
--- Function to copy code
 local function copyCode()
 if setclipboard then
 setclipboard(codeInput.Text)
@@ -221,40 +259,33 @@ errorLabel.Visible = true
 end
 end
 
--- Function to clear code input
 local function clearCode()
 codeInput.Text = ""
 errorLabel.Text = "Code input cleared"
 errorLabel.Visible = true
 end
 
--- Function to save code
 local function saveCode()
--- Implement logic to save the code
 errorLabel.Text = "Save functionality not implemented"
 errorLabel.Visible = true
 end
 
--- Function to load code
 local function loadCode()
--- Implement logic to load the code
 local loadedCode = "print('Hello, world!')" -- Replace with actual loaded content
 codeInput.Text = loadedCode
 errorLabel.Text = "Code loaded"
 errorLabel.Visible = true
 end
 
--- Connect button click events
-executeButton.MouseButton1Click:Connect(executeCode) copyButton.MouseButton1Click:Connect(copyCode)
+executeButton.MouseButton1Click:Connect(executeCode)
+copyButton.MouseButton1Click:Connect(copyCode)
 saveButton.MouseButton1Click:Connect(saveCode)
 clearButton.MouseButton1Click:Connect(clearCode)
 loadButton.MouseButton1Click:Connect(loadCode)
 
--- Adjust GUI size based on device type
 local function adjustGUISize()
 local screenSize = workspace.CurrentCamera.ViewportSize
 if screenSize.Y <= 720 then
--- Mobile device - smaller size
 mainFrame.Size = UDim2.new(0, 340, 0, 500)
 mainFrame.Position = UDim2.new(0.5, -170, 0.5, -250)
 titleLabel.Size = UDim2.new(1, -20, 0, 50)
@@ -271,11 +302,9 @@ end
 executeButton.Position = UDim2.new(0, 10, 1, -90)
 saveButton.Position = UDim2.new(0.33, 0, 1, -90)
 copyButton.Position = UDim2.new(0.66, 0, 1, -90)
-clearButton.Position = UDim2.new(0, 10, 1, -130)
-loadButton.Position = UDim2.new(0.33, 0, 1, -130)
+clearButton.Position = UDim2.new(0, 10, 1, -130) loadButton.Position = UDim2.new(0.33, 0, 1, -130)
 errorLabel.Position = UDim2.new(0, 10, 1, -40)
 else
--- PC - normal size
 mainFrame.Size = UDim2.new(0, 600, 0, 700)
 mainFrame.Position = UDim2.new(0.5, -300, 0.5, -350)
 titleLabel.Size = UDim2.new(1, -20, 0, 60)
@@ -298,12 +327,24 @@ errorLabel.Position = UDim2.new(0, 10, 1, -80)
 end
 end
 
--- Initial GUI adjustment
 adjustGUISize()
-
--- Connect to screen size change event
 workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(adjustGUISize)
 
--- Welcome message
-print("Hello " .. LocalPlayer.Name .. ", Welcome to Imnotexploi4's Executor V1.3")
+local function checkKey()
+if keyInput.Text == "imnotexploi4-executor" then
+errorLabel.Text = "Key correct"
+errorLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+errorLabel.Visible = true
+keyFrame.Visible = false
+mainFrame.Visible = true
+else
+errorLabel.Text = "Key incorrect. Please try again"
+errorLabel.TextColor3 = Color3.fromRGB(255, 69, 0)
+errorLabel.Visible = true
+end
+end
+
+keyButton.MouseButton1Click:Connect(checkKey)
+
+print("Hello " .. LocalPlayer.Name .. ", Welcome to Imnotexploi4's Executor V1.4")
 errorLabel.Visible = false
