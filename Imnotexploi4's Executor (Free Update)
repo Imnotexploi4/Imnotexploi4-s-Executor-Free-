@@ -6,7 +6,7 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 -- Create GUI Elements
 local screenGui = Instance.new("ScreenGui", PlayerGui)
-screenGui.Name = "Imnotexploi4ExecutorV16"
+screenGui.Name = "Imnotexploi4ExecutorV17"
 screenGui.ResetOnSpawn = false
 
 -- Main Frame
@@ -26,7 +26,7 @@ titleLabel.BackgroundTransparency = 1
 titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 titleLabel.Font = Enum.Font.GothamBold
 titleLabel.TextSize = 36
-titleLabel.Text = "Imnotexploi4's Executor V1.6"
+titleLabel.Text = "Imnotexploi4's Executor V1.7"
 
 local pageContainer = Instance.new("ScrollingFrame", mainFrame)
 pageContainer.Size = UDim2.new(1, -40, 0.7, -30)
@@ -84,37 +84,40 @@ local keyButtonCorner = Instance.new("UICorner", keyButton)
 keyButtonCorner.CornerRadius = UDim.new(0, 12)
 
 local function makeDraggable(gui)
-local dragging = false
-local dragInput, mousePos, framePos
+    local dragging = false
+    local dragInput, mousePos, framePos
 
-local function update(input)
-local delta = input.Position - mousePos
-gui.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
-end
+    local function update(input)
+        local delta = input.Position - mousePos
+        gui.Position = UDim2.new(
+            framePos.X.Scale, framePos.X.Offset + delta.X,
+            framePos.Y.Scale, framePos.Y.Offset + delta.Y
+        )
+    end
 
-gui.InputBegan:Connect(function(input)
-if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-dragging = true
-mousePos = input.Position
-framePos = gui.Position
+    gui.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            mousePos = input.Position
+            framePos = gui.Position
 
-input.Changed:Connect(function()
-if input.UserInputState == Enum.UserInputState.End then
-dragging = false
-end
-end)
-end
-end)
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end) gui.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
 
-gui.InputChanged:Connect(function(input)
-if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-dragInput = input
-end
-end) UserInputService.InputChanged:Connect(function(input)
-if dragging and input == dragInput then
-update(input)
-end
-end)
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input == dragInput then
+            update(input)
+        end
+    end)
 end
 
 -- Apply draggable functionality to main frames and toggle button
@@ -122,122 +125,123 @@ makeDraggable(mainFrame)
 makeDraggable(keyFrame)
 
 local function createPageFile(name)
-local pageFile = Instance.new("Frame", pageContainer)
-pageFile.Name = name
-pageFile.Size = UDim2.new(1, -20, 0, 150)
-pageFile.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    local pageFile = Instance.new("Frame", pageContainer)
+    pageFile.Name = name
+    pageFile.Size = UDim2.new(1, -20, 0, 150)
+    pageFile.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 
-local scriptLabel = Instance.new("TextLabel", pageFile)
-scriptLabel.Size = UDim2.new(0.9, 0, 0, 30)
-scriptLabel.Position = UDim2.new(0.05, 0, 0, 10)
-scriptLabel.BackgroundTransparency = 1
-scriptLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-scriptLabel.Font = Enum.Font.GothamBold
-scriptLabel.TextSize = 20
-scriptLabel.Text = name
+    local scriptLabel = Instance.new("TextLabel", pageFile)
+    scriptLabel.Size = UDim2.new(0.9, 0, 0, 30)
+    scriptLabel.Position = UDim2.new(0.05, 0, 0, 10)
+    scriptLabel.BackgroundTransparency = 1
+    scriptLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    scriptLabel.Font = Enum.Font.GothamBold
+    scriptLabel.TextSize = 20
+    scriptLabel.Text = name
 
-local codeInput = Instance.new("TextBox", pageFile)
-codeInput.Size = UDim2.new(0.9, 0, 0.5, 0)
-codeInput.Position = UDim2.new(0.05, 0, 0.3, 10)
-codeInput.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-codeInput.TextColor3 = Color3.fromRGB(255, 255, 255)
-codeInput.Text = ""
-codeInput.ClearTextOnFocus = false
-codeInput.MultiLine = true
-codeInput.TextWrapped = true
-codeInput.Font = Enum.Font.Code
-codeInput.TextSize = 18
-codeInput.PlaceholderText = "Enter your script here..."
+    local codeInput = Instance.new("TextBox", pageFile)
+    codeInput.Size = UDim2.new(0.9, 0, 0.5, 0)
+    codeInput.Position = UDim2.new(0.05, 0, 0.3, 10)
+    codeInput.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    codeInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+    codeInput.Text = ""
+    codeInput.ClearTextOnFocus = false
+    codeInput.MultiLine = true
+    codeInput.TextWrapped = true
+    codeInput.Font = Enum.Font.Code
+    codeInput.TextSize = 18
+    codeInput.PlaceholderText = "Enter your script here..."
 
--- Add New Buttons
-local clearButton = Instance.new("TextButton", pageFile)
-clearButton.Size = UDim2.new(0, 60, 0, 30)
-clearButton.Position = UDim2.new(0.05, 0, 0.85, 0)
-clearButton.BackgroundColor3 = Color3.fromRGB(255, 69, 0)
-clearButton.Text = "Clear"
-clearButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-clearButton.Font = Enum.Font.GothamBold
-clearButton.TextSize = 14
+    -- Add New Buttons
+    local clearButton = Instance.new("TextButton", pageFile)
+    clearButton.Size = UDim2.new(0, 60, 0, 30)
+    clearButton.Position = UDim2.new(0.05, 0, 0.85, 0)
+    clearButton.BackgroundColor3 = Color3.fromRGB(255, 69, 0)
+    clearButton.Text = "Clear"
+    clearButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    clearButton.Font = Enum.Font.GothamBold clearButton.TextSize = 14
 
-local loadButton = Instance.new("TextButton", pageFile)
-loadButton.Size = UDim2.new(0, 60, 0, 30)
-loadButton.Position = UDim2.new(0.20, 0, 0.85, 0)
-loadButton.BackgroundColor3 = Color3.fromRGB(0, 191, 255)
-loadButton.Text = "Load"
-loadButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-loadButton.Font = Enum.Font.GothamBold
-loadButton.TextSize = 14 local saveButton = Instance.new("TextButton", pageFile)
-saveButton.Size = UDim2.new(0, 60, 0, 30)
-saveButton.Position = UDim2.new(0.35, 0, 0.85, 0)
-saveButton.BackgroundColor3 = Color3.fromRGB(0, 191, 255)
-saveButton.Text = "Save"
-saveButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-saveButton.Font = Enum.Font.GothamBold
-saveButton.TextSize = 14
+    local loadButton = Instance.new("TextButton", pageFile)
+    loadButton.Size = UDim2.new(0, 60, 0, 30)
+    loadButton.Position = UDim2.new(0.20, 0, 0.85, 0)
+    loadButton.BackgroundColor3 = Color3.fromRGB(0, 191, 255)
+    loadButton.Text = "Load"
+    loadButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    loadButton.Font = Enum.Font.GothamBold
+    loadButton.TextSize = 14
 
-local copyButton = Instance.new("TextButton", pageFile)
-copyButton.Size = UDim2.new(0, 60, 0, 30)
-copyButton.Position = UDim2.new(0.50, 0, 0.85, 0)
-copyButton.BackgroundColor3 = Color3.fromRGB(0, 191, 255)
-copyButton.Text = "Copy"
-copyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-copyButton.Font = Enum.Font.GothamBold
-copyButton.TextSize = 14
+    local saveButton = Instance.new("TextButton", pageFile)
+    saveButton.Size = UDim2.new(0, 60, 0, 30)
+    saveButton.Position = UDim2.new(0.35, 0, 0.85, 0)
+    saveButton.BackgroundColor3 = Color3.fromRGB(0, 191, 255)
+    saveButton.Text = "Save"
+    saveButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    saveButton.Font = Enum.Font.GothamBold
+    saveButton.TextSize = 14
 
-local executeButton = Instance.new("TextButton", pageFile)
-executeButton.Size = UDim2.new(0, 60, 0, 30)
-executeButton.Position = UDim2.new(0.65, 0, 0.85, 0)
-executeButton.BackgroundColor3 = Color3.fromRGB(0, 255, 127)
-executeButton.Text = "Execute"
-executeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-executeButton.Font = Enum.Font.GothamBold
-executeButton.TextSize = 14
+    local copyButton = Instance.new("TextButton", pageFile)
+    copyButton.Size = UDim2.new(0, 60, 0, 30)
+    copyButton.Position = UDim2.new(0.50, 0, 0.85, 0)
+    copyButton.BackgroundColor3 = Color3.fromRGB(0, 191, 255)
+    copyButton.Text = "Copy"
+    copyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    copyButton.Font = Enum.Font.GothamBold
+    copyButton.TextSize = 14
 
-local deleteButton = Instance.new("TextButton", pageFile)
-deleteButton.Size = UDim2.new(0, 60, 0, 30)
-deleteButton.Position = UDim2.new(0.80, 0, 0.85, 0)
-deleteButton.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
-deleteButton.Text = "Delete"
-deleteButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-deleteButton.Font = Enum.Font.GothamBold
-deleteButton.TextSize = 14
+    local executeButton = Instance.new("TextButton", pageFile)
+    executeButton.Size = UDim2.new(0, 60, 0, 30)
+    executeButton.Position = UDim2.new(0.65, 0, 0.85, 0)
+    executeButton.BackgroundColor3 = Color3.fromRGB(0, 255, 127)
+    executeButton.Text = "Execute"
+    executeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    executeButton.Font = Enum.Font.GothamBold
+    executeButton.TextSize = 14
 
-local pageFileCorner = Instance.new("UICorner", pageFile)
-pageFileCorner.CornerRadius = UDim.new(0, 10)
+    local deleteButton = Instance.new("TextButton", pageFile)
+    deleteButton.Size = UDim2.new(0, 60, 0, 30)
+    deleteButton.Position = UDim2.new(0.80, 0, 0.85, 0)
+    deleteButton.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
+    deleteButton.Text = "Delete"
+    deleteButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    deleteButton.Font = Enum.Font.GothamBold
+    deleteButton.TextSize = 14 local pageFileCorner = Instance.new("UICorner", pageFile)
+    pageFileCorner.CornerRadius = UDim.new(0, 10)
 
-clearButton.MouseButton1Click:Connect(function()
-codeInput.Text = ""
-end)
+    clearButton.MouseButton1Click:Connect(function()
+        codeInput.Text = ""
+    end)
 
-loadButton.MouseButton1Click:Connect(function()
-if savedScripts[name] then
-codeInput.Text = savedScripts[name]
-else
-codeInput.Text = "No script saved for this file."
-end
-end)
+    loadButton.MouseButton1Click:Connect(function()
+        if savedScripts[name] then
+            codeInput.Text = savedScripts[name]
+        else
+            codeInput.Text = "No script saved for this file."
+        end
+    end)
 
-saveButton.MouseButton1Click:Connect(function()
-savedScripts[name] = codeInput.Text
-end)
+    saveButton.MouseButton1Click:Connect(function()
+        savedScripts[name] = codeInput.Text
+    end)
 
-copyButton.MouseButton1Click:Connect(function()
-setclipboard(codeInput.Text)
-end) executeButton.MouseButton1Click:Connect(function()
-loadstring(codeInput.Text)()
-end)
+    copyButton.MouseButton1Click:Connect(function()
+        setclipboard(codeInput.Text)
+    end)
 
-deleteButton.MouseButton1Click:Connect(function()
-pageFile:Destroy()
-table.remove(pageFiles, table.find(pageFiles, pageFile))
-end)
+    executeButton.MouseButton1Click:Connect(function()
+        loadstring(codeInput.Text)()
+    end)
 
-table.insert(pageFiles, pageFile)
+    deleteButton.MouseButton1Click:Connect(function()
+        pageFile:Destroy()
+        table.remove(pageFiles, table.find(pageFiles, pageFile))
+    end)
+
+    table.insert(pageFiles, pageFile)
 end
 
 local function createNewPage()
-local pageCount = #pageFiles + 1
-createPageFile("Script " .. pageCount)
+    local pageCount = #pageFiles + 1
+    createPageFile("Script " .. pageCount)
 end
 
 local newPageButton = Instance.new("TextButton", mainFrame)
@@ -262,8 +266,7 @@ closeButton.Font = Enum.Font.GothamBold
 closeButton.TextSize = 18
 
 local toggleButton = Instance.new("ImageButton", screenGui)
-toggleButton.Name = "ToggleButton"
-toggleButton.Size = UDim2.new(0, 50, 0, 50)
+toggleButton.Name = "ToggleButton"toggleButton.Size = UDim2.new(0, 50, 0, 50)
 toggleButton.Position = UDim2.new(0, 10, 0, 10)
 toggleButton.Image = "rbxassetid://111767375753277" -- Imnotexploi4 icon
 toggleButton.Visible = false
@@ -274,59 +277,112 @@ makeDraggable(keyFrame)
 makeDraggable(toggleButton)
 
 local function toggleGUI()
-mainFrame.Visible = not mainFrame.Visible
-toggleButton.Visible = not mainFrame.Visible
+    mainFrame.Visible = not mainFrame.Visible
+    toggleButton.Visible = not mainFrame.Visible
 end
 
 closeButton.MouseButton1Click:Connect(toggleGUI)
 toggleButton.MouseButton1Click:Connect(toggleGUI)
 
 local function adjustGUISize()
-local screenSize = workspace.CurrentCamera.ViewportSize
-if screenSize.Y <= 720 then
-mainFrame.Size = UDim2.new(0, 340, 0, 500) mainFrame.Position = UDim2.new(0.5, -170, 0.5, -250)
-titleLabel.Size = UDim2.new(1, -20, 0, 50)
-titleLabel.Position = UDim2.new(0, 10, 0, 10)
-pageContainer.Size = UDim2.new(1, 0, 0.8, -50)
-pageContainer.Position = UDim2.new(0, 0, 0.1, 60)
+    local screenSize = workspace.CurrentCamera.ViewportSize
+    if screenSize.Y <= 720 then
+        mainFrame.Size = UDim2.new(0, 340, 0, 500)
+        mainFrame.Position = UDim2.new(0.5, -170, 0.5, -250)
+        titleLabel.Size = UDim2.new(1, -20, 0, 50)
+        titleLabel.Position = UDim2.new(0, 10, 0, 10)
+        pageContainer.Size = UDim2.new(1, 0, 0.8, -50)
+        pageContainer.Position = UDim2.new(0, 0, 0.1, 60)
 
-for _, button in ipairs(mainFrame:GetChildren()) do
-if button:IsA("TextButton") and button.Name ~= "CloseButton" then
-button.Size = UDim2.new(0, 40, 0, 40)
-end
-end
-else
-mainFrame.Size = UDim2.new(0, 700, 0, 500)
-mainFrame.Position = UDim2.new(0.5, -350, 0.5, -250)
-titleLabel.Size = UDim2.new(1, -20, 0, 70)
-titleLabel.Position = UDim2.new(0, 20, 0, 20)
-pageContainer.Size = UDim2.new(1, 0, 0.7, -100)
-pageContainer.Position = UDim2.new(0, 20, 0.3, 60)
+        for _, button in ipairs(mainFrame:GetChildren()) do
+            if button:IsA("TextButton") and button.Name ~= "CloseButton" then
+                button.Size = UDim2.new(0, 40, 0, 40)
+            end
+        end
+    else
+        mainFrame.Size = UDim2.new(0, 700, 0, 500)
+        mainFrame.Position = UDim2.new(0.5, -350, 0.5, -250)
+        titleLabel.Size = UDim2.new(1, -20, 0, 70)
+        titleLabel.Position = UDim2.new(0, 20, 0, 20)
+        pageContainer.Size = UDim2.new(1, 0, 0.7, -100)
+        pageContainer.Position = UDim2.new(0, 20, 0.3, 60)
 
-for _, button in ipairs(mainFrame:GetChildren()) do
-if button:IsA("TextButton") and button.Name ~= "CloseButton" then
-button.Size = UDim2.new(0, 70, 0, 70)
-end
-end
-end
+        for _, button in ipairs(mainFrame:GetChildren()) do
+            if button:IsA("TextButton") and button.Name ~= "CloseButton" then
+                button.Size = UDim2.new(0, 70, 0, 70)
+            end
+        end
+    end
 end
 
 adjustGUISize()
 workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(adjustGUISize)
 
 local function checkKey()
-if keyInput.Text == "imnotexploi4-executor" then
-keyFrame.Visible = false
-mainFrame.Visible = true
-else
-keyInput.Text = "Key incorrect. Please try again"
-keyInput.TextColor3 = Color3.fromRGB(255, 69, 0)
-end
+    if keyInput.Text == "imnotexploi4-executor" then keyFrame.Visible = false
+        mainFrame.Visible = true
+    else
+        keyInput.Text = "Key incorrect. Please try again"
+        keyInput.TextColor3 = Color3.fromRGB(255, 69, 0)
+    end
 end
 
 keyButton.MouseButton1Click:Connect(checkKey)
 
-print("Hello " .. LocalPlayer.Name .. ", Welcome to Imnotexploi4's Executor V1.6")
+print("Hello " .. LocalPlayer.Name .. ", Welcome to Imnotexploi4's Executor V1.7")
 
 -- Create initial script file
 createPageFile("Script 1")
+
+-- Notification GUI
+local notificationFrame = Instance.new("Frame", screenGui)
+notificationFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+notificationFrame.Size = UDim2.new(0, 300, 0, 100)
+notificationFrame.Position = UDim2.new(0.5, -150, 0, 50)
+notificationFrame.Visible = false
+
+local notificationCorner = Instance.new("UICorner", notificationFrame)
+notificationCorner.CornerRadius = UDim.new(0, 15)
+
+local notificationLabel = Instance.new("TextLabel", notificationFrame)
+notificationLabel.Size = UDim2.new(1, -20, 1, -20)
+notificationLabel.Position = UDim2.new(0, 10, 0, 10)
+notificationLabel.BackgroundTransparency = 1
+notificationLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+notificationLabel.Font = Enum.Font.GothamBold
+notificationLabel.TextSize = 18
+notificationLabel.TextWrapped = true
+notificationLabel.Text = ""
+
+makeDraggable(notificationFrame)
+
+local function showNotification(message, duration)
+    notificationLabel.Text = message
+    notificationFrame.Visible = true
+    wait(duration or 5)
+    notificationFrame.Visible = false
+end
+
+-- Example usage of showNotification function
+showNotification("Welcome to Imnotexploi4 's Executor V1.7!", 5)
+
+-- Example of triggering notifications for different events
+local function showErrorNotification()
+    showNotification("Error: Invalid operation.", 5)
+end
+
+local function showWarningNotification()
+    showNotification("Warning: This action is not recommended.", 5)
+end
+
+local function showTipsNotification()
+    showNotification("Tip: Save your progress frequently.", 5)
+end
+
+-- Triggering example notifications
+-- Uncomment these lines to test notification display
+-- showErrorNotification()
+-- showWarningNotification()
+-- showTipsNotification()
+
+-- Additional functions for executing scripts, saving/loading scripts, etc., would go here
