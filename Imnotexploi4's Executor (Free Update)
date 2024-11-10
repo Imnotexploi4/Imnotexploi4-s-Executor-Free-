@@ -1,13 +1,49 @@
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
-
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 -- Create GUI Elements
-local screenGui = Instance.new("ScreenGui", PlayerGui)
-screenGui.Name = "Imnotexploi4ExecutorV17"
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "Imnotexploi4ExecutorV18"
 screenGui.ResetOnSpawn = false
+screenGui.Parent = PlayerGui
+
+-- Function to make GUI elements draggable
+local function makeDraggable(gui)
+    local dragging, dragInput, mousePos, framePos
+
+    local function update(input)
+        local delta = input.Position - mousePos
+        gui.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
+    end
+
+    gui.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            mousePos = input.Position
+            framePos = gui.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    gui.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input == dragInput then
+            update(input)
+        end
+    end)
+end
 
 -- Main Frame
 local mainFrame = Instance.new("Frame", screenGui)
@@ -15,9 +51,11 @@ mainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 mainFrame.Size = UDim2.new(0, 700, 0, 500)
 mainFrame.Position = UDim2.new(0.5, -350, 0.5, -250)
 mainFrame.Visible = false
+makeDraggable(mainFrame)
 
-local mainFrameCorner = Instance.new("UICorner", mainFrame)
+local mainFrameCorner = Instance.new("UICorner")
 mainFrameCorner.CornerRadius = UDim.new(0, 15)
+mainFrameCorner.Parent = mainFrame
 
 local titleLabel = Instance.new("TextLabel", mainFrame)
 titleLabel.Size = UDim2.new(1, -40, 0, 70)
@@ -26,11 +64,54 @@ titleLabel.BackgroundTransparency = 1
 titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 titleLabel.Font = Enum.Font.GothamBold
 titleLabel.TextSize = 36
-titleLabel.Text = "Imnotexploi4's Executor V1.7"
+titleLabel.Text = "Imnotexploi4's Executor V1.8"
+
+local statusLabel = Instance.new("TextLabel", mainFrame)
+statusLabel.Size = UDim2.new(1, -40, 0, 30)
+statusLabel.Position = UDim2.new(0, 20, 0, 100)
+statusLabel.BackgroundTransparency = 1
+statusLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+statusLabel.Font = Enum.Font.GothamBold
+statusLabel.TextSize = 18
+statusLabel.Text = "Roblox Status: Not found."
+
+local attachedLabel = Instance.new("TextLabel", mainFrame)
+attachedLabel.Size = UDim2.new(1, -40, 0, 30)
+attachedLabel.Position = UDim2.new(0, 20, 0, 130)
+attachedLabel.BackgroundTransparency = 1
+attachedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+attachedLabel.Font = Enum.Font.GothamBold
+attachedLabel.TextSize = 18
+attachedLabel.Text = "Roblox Attached: Not attached"
+
+local function showNotification(message, duration)
+    notificationLabel.Text = message
+    notificationFrame.Visible = true
+    delay(duration or 5, function()
+        notificationFrame.Visible = false
+    end)
+end
+
+local attachButton = Instance.new("TextButton", mainFrame)
+attachButton.Size = UDim2.new(0, 100, 0, 40)
+attachButton.Position = UDim2.new(1, -140, 0, 130)
+attachButton.BackgroundColor3 = Color3.fromRGB(0, 191, 255)
+attachButton.Text = "Attach"
+attachButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+attachButton.Font = Enum.Font.GothamBold
+attachButton.TextSize = 18
+attachButton.MouseButton1Click:Connect(function()
+    if attachedLabel.Text == "Roblox Attached: Attached" then
+        showNotification("Error: You have already attached the Roblox Client.", 5)
+    else
+        statusLabel.Text = "Roblox Status: Found"
+        attachedLabel.Text = "Roblox Attached: Attached"showNotification("Roblox Client has been attached successfully.", 5)
+    end
+end)
 
 local pageContainer = Instance.new("ScrollingFrame", mainFrame)
-pageContainer.Size = UDim2.new(1, -40, 0.7, -30)
-pageContainer.Position = UDim2.new(0, 20, 0, 110)
+pageContainer.Size = UDim2.new(1, -40, 0.5, -30)
+pageContainer.Position = UDim2.new(0, 20, 0, 180)
 pageContainer.BackgroundTransparency = 1
 pageContainer.CanvasSize = UDim2.new(0, 0, 5, 0)
 pageContainer.ScrollBarThickness = 10
@@ -48,11 +129,14 @@ keyFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 keyFrame.Size = UDim2.new(0, 400, 0, 200)
 keyFrame.Position = UDim2.new(0.5, -200, 0.5, -100)
 keyFrame.Visible = true
+makeDraggable(keyFrame)
 
 local keyFrameCorner = Instance.new("UICorner", keyFrame)
 keyFrameCorner.CornerRadius = UDim.new(0, 15)
+keyFrameCorner.Parent = keyFrame
 
-local keyTitleLabel = Instance.new("TextLabel", keyFrame) keyTitleLabel.Size = UDim2.new(1, -20, 0, 40)
+local keyTitleLabel = Instance.new("TextLabel", keyFrame)
+keyTitleLabel.Size = UDim2.new(1, -20, 0, 40)
 keyTitleLabel.Position = UDim2.new(0, 10, 0, 10)
 keyTitleLabel.BackgroundTransparency = 1
 keyTitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -74,61 +158,21 @@ keyInput.PlaceholderText = "Enter the key here"
 local keyButton = Instance.new("TextButton", keyFrame)
 keyButton.BackgroundColor3 = Color3.fromRGB(0, 191, 255)
 keyButton.Text = "Check Key"
-keyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-keyButton.Font = Enum.Font.Gotham
+keyButton.TextColor3 = Color3.fromRGB(255, 255, 255) keyButton.Font = Enum.Font.Gotham
 keyButton.TextSize = 18
 keyButton.Size = UDim2.new(0, 150, 0, 50)
 keyButton.Position = UDim2.new(0.5, -75, 0, 120)
 
 local keyButtonCorner = Instance.new("UICorner", keyButton)
 keyButtonCorner.CornerRadius = UDim.new(0, 12)
-
-local function makeDraggable(gui)
-    local dragging = false
-    local dragInput, mousePos, framePos
-
-    local function update(input)
-        local delta = input.Position - mousePos
-        gui.Position = UDim2.new(
-            framePos.X.Scale, framePos.X.Offset + delta.X,
-            framePos.Y.Scale, framePos.Y.Offset + delta.Y
-        )
-    end
-
-    gui.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            mousePos = input.Position
-            framePos = gui.Position
-
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end) gui.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
-    end)
-
-    UserInputService.InputChanged:Connect(function(input)
-        if dragging and input == dragInput then
-            update(input)
-        end
-    end)
-end
-
--- Apply draggable functionality to main frames and toggle button
-makeDraggable(mainFrame)
-makeDraggable(keyFrame)
+keyButtonCorner.Parent = keyButton
 
 local function createPageFile(name)
     local pageFile = Instance.new("Frame", pageContainer)
     pageFile.Name = name
     pageFile.Size = UDim2.new(1, -20, 0, 150)
     pageFile.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    makeDraggable(pageFile)
 
     local scriptLabel = Instance.new("TextLabel", pageFile)
     scriptLabel.Size = UDim2.new(0.9, 0, 0, 30)
@@ -159,11 +203,11 @@ local function createPageFile(name)
     clearButton.BackgroundColor3 = Color3.fromRGB(255, 69, 0)
     clearButton.Text = "Clear"
     clearButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    clearButton.Font = Enum.Font.GothamBold clearButton.TextSize = 14
+    clearButton.Font = Enum.Font.GothamBold
+    clearButton.TextSize = 14
 
     local loadButton = Instance.new("TextButton", pageFile)
-    loadButton.Size = UDim2.new(0, 60, 0, 30)
-    loadButton.Position = UDim2.new(0.20, 0, 0.85, 0)
+    loadButton.Size = UDim2.new(0, 60, 0, 30) loadButton.Position = UDim2.new(0.20, 0, 0.85, 0)
     loadButton.BackgroundColor3 = Color3.fromRGB(0, 191, 255)
     loadButton.Text = "Load"
     loadButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -197,15 +241,25 @@ local function createPageFile(name)
     executeButton.Font = Enum.Font.GothamBold
     executeButton.TextSize = 14
 
+    executeButton.MouseButton1Click:Connect(function()
+        if statusLabel.Text == "Roblox Status: Found" and attachedLabel.Text == "Roblox Attached: Attached" then
+            loadstring(codeInput.Text)()
+        else
+            showNotification("Tips: You are not attaching a Roblox Client. Please click the Attach button to find and attach the Roblox Client game.", 5)
+        end
+    end)
+
     local deleteButton = Instance.new("TextButton", pageFile)
-    deleteButton.Size = UDim2.new(0, 60, 0, 30)
-    deleteButton.Position = UDim2.new(0.80, 0, 0.85, 0)
+    deleteButton.Size = UDim2.new(0, 60, 0, 30) deleteButton.Position = UDim2.new(0.80, 0, 0.85, 0)
     deleteButton.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
     deleteButton.Text = "Delete"
     deleteButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     deleteButton.Font = Enum.Font.GothamBold
-    deleteButton.TextSize = 14 local pageFileCorner = Instance.new("UICorner", pageFile)
+    deleteButton.TextSize = 14
+
+    local pageFileCorner = Instance.new("UICorner", pageFile)
     pageFileCorner.CornerRadius = UDim.new(0, 10)
+    pageFileCorner.Parent = pageFile
 
     clearButton.MouseButton1Click:Connect(function()
         codeInput.Text = ""
@@ -227,15 +281,12 @@ local function createPageFile(name)
         setclipboard(codeInput.Text)
     end)
 
-    executeButton.MouseButton1Click:Connect(function()
-        loadstring(codeInput.Text)()
-    end)
-
     deleteButton.MouseButton1Click:Connect(function()
         pageFile:Destroy()
         table.remove(pageFiles, table.find(pageFiles, pageFile))
     end)
 
+    pageFile.Parent = pageContainer
     table.insert(pageFiles, pageFile)
 end
 
@@ -252,28 +303,23 @@ newPageButton.Text = "+"
 newPageButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 newPageButton.Font = Enum.Font.GothamBold
 newPageButton.TextSize = 36
-
 newPageButton.MouseButton1Click:Connect(createNewPage)
 
 local closeButton = Instance.new("TextButton", mainFrame)
 closeButton.Name = "CloseButton"
 closeButton.Size = UDim2.new(0, 40, 0, 40)
 closeButton.Position = UDim2.new(1, -50, 0, 20)
-closeButton.BackgroundColor3 = Color3.fromRGB(220, 20, 60)
-closeButton.Text = "X"
+closeButton.BackgroundColor3 = Color3.fromRGB(220, 20, 60) closeButton.Text = "X"
 closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 closeButton.Font = Enum.Font.GothamBold
 closeButton.TextSize = 18
 
 local toggleButton = Instance.new("ImageButton", screenGui)
-toggleButton.Name = "ToggleButton"toggleButton.Size = UDim2.new(0, 50, 0, 50)
+toggleButton.Name = "ToggleButton"
+toggleButton.Size = UDim2.new(0, 50, 0, 50)
 toggleButton.Position = UDim2.new(0, 10, 0, 10)
 toggleButton.Image = "rbxassetid://111767375753277" -- Imnotexploi4 icon
 toggleButton.Visible = false
-
--- Apply draggable functionality to main frames and toggle button
-makeDraggable(mainFrame)
-makeDraggable(keyFrame)
 makeDraggable(toggleButton)
 
 local function toggleGUI()
@@ -303,7 +349,7 @@ local function adjustGUISize()
         mainFrame.Size = UDim2.new(0, 700, 0, 500)
         mainFrame.Position = UDim2.new(0.5, -350, 0.5, -250)
         titleLabel.Size = UDim2.new(1, -20, 0, 70)
-        titleLabel.Position = UDim2.new(0, 20, 0, 20)
+        titleLabel.Position = UDim2.new(0, 20, 0, 0, 20)
         pageContainer.Size = UDim2.new(1, 0, 0.7, -100)
         pageContainer.Position = UDim2.new(0, 20, 0.3, 60)
 
@@ -315,11 +361,11 @@ local function adjustGUISize()
     end
 end
 
-adjustGUISize()
-workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(adjustGUISize)
+adjustGUISize() workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(adjustGUISize)
 
 local function checkKey()
-    if keyInput.Text == "imnotexploi4-executor" then keyFrame.Visible = false
+    if keyInput.Text == "imnotexploi4-executor" then
+        keyFrame.Visible = false
         mainFrame.Visible = true
     else
         keyInput.Text = "Key incorrect. Please try again"
@@ -329,7 +375,7 @@ end
 
 keyButton.MouseButton1Click:Connect(checkKey)
 
-print("Hello " .. LocalPlayer.Name .. ", Welcome to Imnotexploi4's Executor V1.7")
+print("Hello " .. LocalPlayer.Name .. ", welcome to Imnotexploi4's Executor V1.8")
 
 -- Create initial script file
 createPageFile("Script 1")
@@ -338,11 +384,13 @@ createPageFile("Script 1")
 local notificationFrame = Instance.new("Frame", screenGui)
 notificationFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 notificationFrame.Size = UDim2.new(0, 300, 0, 100)
-notificationFrame.Position = UDim2.new(0.5, -150, 0, 50)
+notificationFrame.Position = UDim2.new(0.5, -150, 0.5, -50)
 notificationFrame.Visible = false
+makeDraggable(notificationFrame)
 
 local notificationCorner = Instance.new("UICorner", notificationFrame)
 notificationCorner.CornerRadius = UDim.new(0, 15)
+notificationCorner.Parent = notificationFrame
 
 local notificationLabel = Instance.new("TextLabel", notificationFrame)
 notificationLabel.Size = UDim2.new(1, -20, 1, -20)
@@ -354,35 +402,19 @@ notificationLabel.TextSize = 18
 notificationLabel.TextWrapped = true
 notificationLabel.Text = ""
 
-makeDraggable(notificationFrame)
-
-local function showNotification(message, duration)
-    notificationLabel.Text = message
-    notificationFrame.Visible = true
-    wait(duration or 5)
-    notificationFrame.Visible = false
-end
-
 -- Example usage of showNotification function
-showNotification("Welcome to Imnotexploi4 's Executor V1.7!", 5)
-
--- Example of triggering notifications for different events
-local function showErrorNotification()
-    showNotification("Error: Invalid operation.", 5)
-end
-
-local function showWarningNotification()
-    showNotification("Warning: This action is not recommended.", 5)
-end
-
-local function showTipsNotification()
-    showNotification("Tip: Save your progress frequently.", 5)
-end
-
--- Triggering example notifications
--- Uncomment these lines to test notification display
--- showErrorNotification()
--- showWarningNotification()
--- showTipsNotification()
+-- Uncomment the following lines to test the notification system:
+-- showNotification("Welcome to Imnotexploi4's Executor V1.8!", 5)
+-- wait(6)
+-- showNotification("Error: Invalid operation.", 5)
+-- wait(6)
+-- showNotification("Warning: This action is not recommended.", 5)
+-- wait(6)
+-- showNotification("Tips: Save your progress frequently.", 5)
 
 -- Additional functions for executing scripts, saving/loading scripts, etc., would go here
+
+-- GUI Toggle Button Functionality
+toggleButton.MouseButton1Click:Connect(function()
+    toggleGUI()
+end)
